@@ -1,0 +1,51 @@
+use PortfolioProject
+select * from covidDeaths$
+
+/* the total number of death */
+select location,date,total_cases,new_cases,total_deaths,population from covidDeaths$
+order by 1,2
+--1,2  refers to column 3 and 4 on the  table
+
+----looking at the total case vs total deaths
+select location ,date,total_cases,total_deaths, (total_deaths/total_cases)*100 as DeathPercentage from covidDeaths$
+where location like '%states%'
+order by 1,2
+
+---looking at Total case vs population
+---- showing percentage of people who got covid
+select location, date, total_cases,population, (total_cases/population)/100 as DeathPercentage from covidDeaths$
+--where location like '%states%'
+order by 1,2
+
+--- Looking at countries with highest infection rate compared to population
+select location,population, Max(total_cases) as HighestInfectionCount, Max(total_cases/population)*100 as PercentPoulationInfected from coviddeaths$
+group by location,population
+order by 1,2
+-- showing highest infected population
+select location,population, Max(total_cases) as HighestInfectionCount, Max(total_cases/population)*100 as PercentPoulationInfected from coviddeaths$
+where continent is not null
+group by location,population
+order by HighestInfectionCount desc
+
+
+---lets break down by continent
+select location,Max(cast(total_deaths as int)) as TotalDeathCount
+from covidDeaths$
+where continent is null
+group by location
+order by totaldeathcount desc
+
+
+---lets break down by continent
+select continent,Max(cast(total_deaths as int)) as TotalDeathCount
+from covidDeaths$
+where continent is not null
+group by continent
+order by totaldeathcount desc
+
+
+---GLOBAL NUMBERS
+select date,total_cases,total_deaths,(cast(total_deaths as int)/total_cases)*100 as DeathPercecntage from covidDeaths
+where continent is not null
+group by date
+order by 1,2 
